@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <title>Clase 12 Def: WebSockets</title>
+</head>
+<body>
+    <h1 class="fs-5 text-center text-bg-success p-2">Clase 16 Def: "Base de datos" (MariaDB, SQLite)</h1>
+
+    <h2 class="text-center mt-3 text-primary">Ingrese un Producto <span class="text-secondary">(MariaDB)</span></h2>
+    <div class="container mt-4 bg-light p-2 border">
+        <form action="/productos" enctype="application/x-www-form-urlencoded" method="POST" id="ingresarProducto">
+            <div class="mb-5">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                <label for="precio" class="form-label">Precio</label>
+                <input type="number" class="form-control" id="precio" name="precio" step="0.01" required>
+                <label for="foto" class="form-label">Foto URL</label>
+                <input type="url" class="form-control" id="foto" name="foto" required>
+            </div>
+            <button type="submit" class="btn btn-primary me-3">Cargar producto</button>
+        </form>
+        <hr>
+        <div id="productos"></div>
+    </div>
+    <div class="container mt-5 bg-light p-2 border border-1">
+          <form id="enviarMensaje">
+            <h2 class="text-center mt-3 text-primary">Centro de Mensajes <span class="text-secondary">(SQLite)</span></h2>
+            <input type="email" class="m-1" id="author" placeholder="Ingresar email" required>
+            <hr>
+            <div class="container bg-black" id="messages"></div>
+            <hr>
+            <input type="text" class="m-1" id="newMsj" placeholder="Ingresar mensaje" required>
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+    </div>
+    
+    <script src="./index.js"></script>
+
+    <footer class="fs-5 text-center text-bg-warning p-2 text-secondary"><p>&copy; 2022 - Odriozola Eduardo</p></footer>
+</body>
+
+</html>
