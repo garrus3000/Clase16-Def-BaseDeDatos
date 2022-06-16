@@ -39,6 +39,7 @@ app.get("/api/mensajes", async (req, res) => {
     res.status(200).send(await mensajes.getAll());
 });
 
+
 app.get("/api/mensajes/:id?", async (req, res) => {
     const id = req.params.id;
     const mensajePorId = await mensajes.getById(id);
