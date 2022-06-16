@@ -48,7 +48,7 @@ class Contenedor {
             let element = await this.knex(this.table)
                 .insert(new_article)
                 .then((element) => element);
-            return element;
+            // return element;
         } catch (err) {
             console.log("Error en save: ", err);
             throw err;
