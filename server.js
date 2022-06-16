@@ -25,7 +25,6 @@ ioServer.on("connection", async (socket) => {
         await mensajes.save(msj);
         ioServer.sockets.emit("messages", await mensajes.getAll());
     });
-
     
     socket.emit("productos", await productos.getAll());
 
@@ -33,16 +32,15 @@ ioServer.on("connection", async (socket) => {
         await productos.save(producto);
         ioServer.sockets.emit("productos", await productos.getAll());
     });
-
 });
 
 //MENSAJES
-app.get("/mensajes", async (req, res) => {
+app.get("/api/mensajes", async (req, res) => {
     res.status(200).send(await mensajes.getAll());
 });
 
 
-app.get("/mensajes/:id?", async (req, res) => {
+app.get("/api/mensajes/:id?", async (req, res) => {
     const id = req.params.id;
     const mensajePorId = await mensajes.getById(id);
     mensajePorId !== null
@@ -50,7 +48,7 @@ app.get("/mensajes/:id?", async (req, res) => {
         : res.status(404).send(await mensajes.getAll());
 });
 
-app.delete("/mensajes/:id", async (req, res) => {
+app.delete("/api/mensajes/:id", async (req, res) => {
     const id = req.params.id;
     const mensajePorId = await mensajes.getById(id);
     mensajePorId !== null
@@ -60,20 +58,23 @@ app.delete("/mensajes/:id", async (req, res) => {
     ioServer.sockets.emit("messages", await mensajes.getAll());
 });
 
-app.put("/mensajes/:id", async (req, res) => {
+app.put("/api/mensajes/:id", async (req, res) => {
     const id = req.params.id;
-    const {newMsj} = req.body;
-    const msj_editado = await mensajes.updateById(id, (`Msj ed.: ${newMsj}`));
-    res.status(201).send(msj_editado);
-    ioServer.sockets.emit("messages", await mensajes.getAll());
+    const exist = await mensajes.getById(id);
+    if (exist !== null) {
+        const { newMsj } = req.body;
+        const msj_editado = await mensajes.updateById(id, `Msj ed.: ${newMsj}`);
+        res.status(201).send(msj_editado);
+        ioServer.sockets.emit("messages", await mensajes.getAll());
+    } else res.status(404).json(`ERROR ID:${id} no encontrado`);
 });
 
 //PRODUCTOS
-app.get("/productos" , async (req, res) => {
+app.get("/api/productos" , async (req, res) => {
     res.status(200).send(await productos.getAll());
 });
 
-app.get("/productos/:id?", async (req, res) => {
+app.get("/api/productos/:id?", async (req, res) => {
     const id = req.params.id;
     const productoPorId = await productos.getById(id);
     productoPorId !== null
@@ -81,7 +82,7 @@ app.get("/productos/:id?", async (req, res) => {
         : res.status(404).send(await productos.getAll());
 });
 
-app.delete("/productos/:id", async (req, res) => {
+app.delete("/api/productos/:id", async (req, res) => {
     const id = req.params.id;
     const productoPorId = await productos.getById(id);
     productoPorId !== null
@@ -89,18 +90,20 @@ app.delete("/productos/:id", async (req, res) => {
         : res.status(404).json(`ERROR ID:${id} no encontrado`);
 });
 
-app.put("/productos/:id", async (req, res) => {
+app.put("/api/productos/:id", async (req, res) => {
     const id = req.params.id;
-    const { nombre, precio, foto, stock } = req.body;
-    const prod_editado = await productos.updateById(id, {
-        nombre,
-        precio,
-        foto,
-        stock,
-    });
-    res.status(201).send(prod_editado);
-    res.status(404).json(`ERROR ID:${id} no encontrado`);
-    ioServer.sockets.emit("productos", await productos.getAll());
+    const exist = await productos.getById(id);
+    if (exist !== null) {
+        const { nombre, precio, foto, stock } = req.body;
+        const prod_editado = await productos.updateById(id, {
+            nombre,
+            precio,
+            foto,
+            stock,
+        });
+        res.status(201).send(prod_editado);
+        ioServer.sockets.emit("productos", await productos.getAll());
+    } else res.status(404).json(`ERROR ID:${id} no encontrado`);
 });
 
 app.use((req, res) => {
